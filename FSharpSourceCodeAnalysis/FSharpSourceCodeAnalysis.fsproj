@@ -6,8 +6,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Core\Attributes.fs"/>
+        <Compile Include="Core\Parser.fs"/>
+        <Compile Include="Examples\Example1.fs"/>
         <Compile Include="Program.fs"/>
-        <Compile Include="Core.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FSharp.Compiler.Service" Version="43.8.301"/>
     </ItemGroup>
 
 </Project>
