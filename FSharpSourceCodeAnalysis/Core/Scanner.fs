@@ -1,22 +1,19 @@
 ﻿namespace FSharpSourceCodeAnalysis.Core
 
 module Scanner =
-    
-    type WatchCondition =
-        | String
 
+    type AnalyzerRule =
+        { Id: string
+          Name: string
+          Description: string
+          Condition: Condition }
 
-    type Condition =
-        | HasAttribute
+    and Condition =
+        | HasAttribute of AttributeCondition
         | Not of Condition
         | And of Condition * Condition
         | Or of Condition * Condition
         | Any of Condition list
         | All of Condition list
 
-    and AttributeCondition =
-        {
-            AttributeName: string
-            
-        }
-    
+    and AttributeCondition = { AttributeName: string }
