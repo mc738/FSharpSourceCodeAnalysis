@@ -28,7 +28,10 @@ let t =
                 decls |> List.map test |> ignore
 
             | SynModuleDecl.Let(isRecursive, bindings, range) ->
-                
+                //bindings
+                //|> List.map (fun sb ->
+                //    match sb with
+                //    | SynBinding(accessibility, kind, isInline, isMutable, attributes, xmlDoc, valData, headPat, returnInfo, expr, range, debugPoint, trivia) -> failwith "todo")
                 
                 
                 printfn "let"
