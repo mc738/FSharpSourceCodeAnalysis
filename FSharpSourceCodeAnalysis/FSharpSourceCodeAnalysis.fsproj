@@ -8,6 +8,7 @@
     <ItemGroup>
         <Compile Include="Core\Attributes.fs"/>
         <Compile Include="Core\Parser.fs"/>
+        <Compile Include="Core\Scanner.fs" />
         <Compile Include="Examples\Example1.fs"/>
         <Compile Include="Program.fs"/>
     </ItemGroup>
