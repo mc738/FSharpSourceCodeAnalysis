@@ -1,5 +1,7 @@
 ﻿namespace FSharpSourceCodeAnalysis.Core
 
+open FSharp.Compiler.Text
+
 module Scanner =
 
     type AnalyzerRule =
@@ -18,6 +20,16 @@ module Scanner =
 
     and AttributeCondition = { AttributeName: string }
 
+    type WatchedBinding =
+        {
+            Name: string
+            
+        }
+        
+    and WatchedBindingType =
+        | Function
+        | Method
+    
     type AnalyzerRuleResult = { RuleId: string; Range: SourceRange }
 
     and SourceRange =
@@ -25,5 +37,9 @@ module Scanner =
           StartColumn: int
           EndLine: int
           EndColumn: int }
-        
-        
+
+        static member FromRange(range: Range) =
+            { StartLine = range.Start.Line
+              StartColumn = range.Start.Column
+              EndLine = range.End.Line
+              EndColumn = range.End.Column }
