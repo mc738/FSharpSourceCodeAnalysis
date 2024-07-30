@@ -6,7 +6,12 @@ module Example1 =
 
 
     [<Vulnerable>]
-    let myFunction (input: string) = ()
+    let myFunction (input: string) =
+        // Do something.
+        
+        printfn "input"
+        
+        ()
 
     [<Sanitizer>]
     let sanitizerFunction (input: string) = input
