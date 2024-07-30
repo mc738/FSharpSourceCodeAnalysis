@@ -32,8 +32,32 @@ let t =
                 //|> List.map (fun sb ->
                 //    match sb with
                 //    | SynBinding(accessibility, kind, isInline, isMutable, attributes, xmlDoc, valData, headPat, returnInfo, expr, range, debugPoint, trivia) -> failwith "todo")
-                
-                
+
+                match  bindings[0] with
+                | SynBinding(accessibility, kind, isInline, isMutable, attributes, xmlDoc, valData, headPat, returnInfo, expr, range, debugPoint, trivia) ->
+                    match headPat with
+                    | SynPat.Const(constant, range) -> failwith "todo"
+                    | SynPat.Wild range -> failwith "todo"
+                    | SynPat.Named(ident, isThisVal, accessibility, range) -> failwith "todo"
+                    | SynPat.Typed(pat, targetType, range) -> failwith "todo"
+                    | SynPat.Attrib(pat, attributes, range) -> failwith "todo"
+                    | SynPat.Or(lhsPat, rhsPat, range, trivia) -> failwith "todo"
+                    | SynPat.ListCons(lhsPat, rhsPat, range, trivia) -> failwith "todo"
+                    | SynPat.Ands(pats, range) -> failwith "todo"
+                    | SynPat.As(lhsPat, rhsPat, range) -> failwith "todo"
+                    | SynPat.LongIdent(longDotId, extraId, typarDecls, argPats, accessibility, range) -> failwith "todo"
+                    | SynPat.Tuple(isStruct, elementPats, commaRanges, range) -> failwith "todo"
+                    | SynPat.Paren(pat, range) -> failwith "todo"
+                    | SynPat.ArrayOrList(isArray, elementPats, range) -> failwith "todo"
+                    | SynPat.Record(fieldPats, range) -> failwith "todo"
+                    | SynPat.Null range -> failwith "todo"
+                    | SynPat.OptionalVal(ident, range) -> failwith "todo"
+                    | SynPat.IsInst(pat, range) -> failwith "todo"
+                    | SynPat.QuoteExpr(expr, range) -> failwith "todo"
+                    | SynPat.InstanceMember(thisId, memberId, toolingId, accessibility, range) -> failwith "todo"
+                    | SynPat.FromParseError(pat, range) -> failwith "todo"
+                    
+                    failwith "todo"
                 printfn "let"
 
             | SynModuleDecl.Expr(expr, range) -> printfn "expr"
