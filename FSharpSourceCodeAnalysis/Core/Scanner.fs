@@ -17,3 +17,13 @@ module Scanner =
         | All of Condition list
 
     and AttributeCondition = { AttributeName: string }
+
+    type AnalyzerRuleResult = { RuleId: string; Range: SourceRange }
+
+    and SourceRange =
+        { StartLine: int
+          StartColumn: int
+          EndLine: int
+          EndColumn: int }
+        
+        
