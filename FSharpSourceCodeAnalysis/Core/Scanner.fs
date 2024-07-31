@@ -1,5 +1,6 @@
 ﻿namespace FSharpSourceCodeAnalysis.Core
 
+open FSharp.Compiler.Syntax
 open FSharp.Compiler.Text
 
 module Scanner =
@@ -20,10 +21,22 @@ module Scanner =
 
     and AttributeCondition = { AttributeName: string }
 
+    type BindingWatcher =
+        {
+            Condition: Condition
+        }
+    
+    and BindingWatcherCondition =
+        | Not of Condition
+        | And of Condition * Condition
+        | Or of Condition * Condition
+        | Any of Condition list
+        | All of Condition list
+    
     type WatchedBinding =
         {
             Name: string
-            
+            RawBinding: SynBinding
         }
         
     and WatchedBindingType =
@@ -43,3 +56,9 @@ module Scanner =
               StartColumn = range.Start.Column
               EndLine = range.End.Line
               EndColumn = range.End.Column }
+
+    type ScannerState =
+        {
+            BindingWatchers: BindingWatcher list
+            WatchedBindings: WatchedBinding list
+        }
