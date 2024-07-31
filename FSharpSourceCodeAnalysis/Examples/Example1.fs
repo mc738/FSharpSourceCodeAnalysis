@@ -8,14 +8,13 @@ module Example1 =
     [<Vulnerable>]
     let myFunction (input: string) =
         // Do something.
-        
+
         printfn "input"
-        
+
         ()
 
     [<Sanitizer>]
     let sanitizerFunction (input: string) = input
-
 
     let testSafeFunction () =
         // This function is safe because we have control over the input.
