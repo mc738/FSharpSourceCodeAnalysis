@@ -52,8 +52,7 @@ module Scanner =
                     attributes
                     |> List.exists (fun a ->
                         a.Attributes
-                        |> List.exists (fun sa ->
-                            sa.TypeName.LongIdent[0].idText = attributeCondition.AttributeName))
+                        |> List.exists (fun sa -> sa.TypeName.LongIdent[0].idText = attributeCondition.AttributeName))
             | Bespoke fn -> fn binding
             | Not bindingWatcherCondition -> bindingWatcherCondition.Test binding |> not
             | And(a, b) -> a.Test binding && b.Test binding
@@ -61,6 +60,15 @@ module Scanner =
             | Any conditions -> conditions |> List.exists (fun c -> c.Test binding)
             | All conditions -> conditions |> List.forall (fun c -> c.Test binding)
 
+    type DeclarationType =
+        | ModuleAbbrev
+        | NestedModule
+        | Let
+        | Expr
+        | Types
+        | Exception
+        | Open
+        
     type WatchedBinding =
         { Name: string
           Range: SourceRange
@@ -82,15 +90,30 @@ module Scanner =
 
     type ScannerState =
         { WatchedBindings: WatchedBinding list }
-        
-        static member Empty() = { WatchedBinding: [] }
+
+        static member Empty() = { WatchedBindings = [] }
 
     type ScannerSettings =
-        {
-          BindingWatchers: BindingWatcher list  
-        }
+        { BindingWatchers: BindingWatcher list }
 
+    
+    let handleDeclaration (state: ScannerState) (declaration: SynModuleDecl) =
+        match declaration with
+        | SynModuleDecl.ModuleAbbrev(ident, longId, range) -> state
+        | SynModuleDecl.NestedModule(moduleInfo, isRecursive, decls, isContinuing, range, trivia) -> state
+        | SynModuleDecl.Let(isRecursive, bindings, range) -> state
+        | SynModuleDecl.Expr(expr, range) -> state
+        | SynModuleDecl.Types(typeDefns, range) -> state
+        | SynModuleDecl.Exception(exnDefn, range) -> state
+        | SynModuleDecl.Open(target, range) -> state
+        | SynModuleDecl.Attributes(attributes, range) -> state
+        | SynModuleDecl.HashDirective(hashDirective, range) -> state
+        | SynModuleDecl.NamespaceFragment fragment -> state
 
-    let run (settings: ScannerSettings) =
+    let run (settings: ScannerSettings) (declarations: SynModuleDecl list) =
+        let state = ScannerState.Empty
         
+        
+        
+
         ()
