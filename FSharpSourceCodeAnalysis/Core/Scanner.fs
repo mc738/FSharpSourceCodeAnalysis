@@ -21,7 +21,9 @@ module Scanner =
 
     and AttributeCondition = { AttributeName: string }
 
-    type BindingWatcher = { Condition: BindingWatcherCondition }
+    type BindingWatcher =
+        { Condition: BindingWatcherCondition
+          Rules: AnalyzerRule list }
 
     and BindingWatcherCondition =
         | HasAttribute of AttributeCondition
@@ -68,7 +70,10 @@ module Scanner =
         | Types
         | Exception
         | Open
-        
+        | Attributes
+        | HashDirective
+        | NamespaceFragment
+
     type WatchedBinding =
         { Name: string
           Range: SourceRange
@@ -96,12 +101,28 @@ module Scanner =
     type ScannerSettings =
         { BindingWatchers: BindingWatcher list }
 
-    
-    let handleDeclaration (state: ScannerState) (declaration: SynModuleDecl) =
+    let handleBinding (settings: ScannerSettings) (state: ScannerState) (binding: SynBinding) =
+        // Check if any og the bindings require watching.
+
+        let newState =
+            if settings.BindingWatchers |> List.exists (fun bw -> bw.Condition.Test binding) then
+                let newWatcher =
+                    { Name = ""
+                      Range = SourceRange.FromRange binding.RangeOfHeadPattern
+                      RawBinding = binding }
+
+                { state with
+                    WatchedBindings = newWatcher :: state.WatchedBindings }
+            else
+                state
+
+        newState
+
+    let handleDeclaration (state: ScannerState) (settings: ScannerSettings) (declaration: SynModuleDecl) =
         match declaration with
         | SynModuleDecl.ModuleAbbrev(ident, longId, range) -> state
         | SynModuleDecl.NestedModule(moduleInfo, isRecursive, decls, isContinuing, range, trivia) -> state
-        | SynModuleDecl.Let(isRecursive, bindings, range) -> state
+        | SynModuleDecl.Let(isRecursive, bindings, range) -> bindings |> List.fold (handleBinding settings) state
         | SynModuleDecl.Expr(expr, range) -> state
         | SynModuleDecl.Types(typeDefns, range) -> state
         | SynModuleDecl.Exception(exnDefn, range) -> state
@@ -112,8 +133,8 @@ module Scanner =
 
     let run (settings: ScannerSettings) (declarations: SynModuleDecl list) =
         let state = ScannerState.Empty
-        
-        
-        
+
+
+
 
         ()
