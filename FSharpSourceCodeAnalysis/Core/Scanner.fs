@@ -31,8 +31,35 @@ module Scanner =
         | Or of BindingWatcherCondition * BindingWatcherCondition
         | Any of BindingWatcherCondition list
         | All of BindingWatcherCondition list
-        
-        member bwc.Test()
+
+        member bwc.Test(binding: SynBinding) =
+            match bwc with
+            | HasAttribute attributeCondition ->
+                match binding with
+                | SynBinding(accessibility,
+                             kind,
+                             isInline,
+                             isMutable,
+                             attributes,
+                             xmlDoc,
+                             valData,
+                             headPat,
+                             returnInfo,
+                             expr,
+                             range,
+                             debugPoint,
+                             trivia) ->
+                    attributes
+                    |> List.exists (fun a ->
+                        a.Attributes
+                        |> List.exists (fun sa ->
+                            sa.TypeName.LongIdent[0].idText = attributeCondition.AttributeName))
+            | Bespoke fn -> fn binding
+            | Not bindingWatcherCondition -> bindingWatcherCondition.Test binding |> not
+            | And(a, b) -> a.Test binding && b.Test binding
+            | Or(a, b) -> a.Test binding || b.Test binding
+            | Any conditions -> conditions |> List.exists (fun c -> c.Test binding)
+            | All conditions -> conditions |> List.forall (fun c -> c.Test binding)
 
     type WatchedBinding =
         { Name: string
@@ -54,5 +81,16 @@ module Scanner =
               EndColumn = range.End.Column }
 
     type ScannerState =
-        { BindingWatchers: BindingWatcher list
-          WatchedBindings: WatchedBinding list }
+        { WatchedBindings: WatchedBinding list }
+        
+        static member Empty() = { WatchedBinding: [] }
+
+    type ScannerSettings =
+        {
+          BindingWatchers: BindingWatcher list  
+        }
+
+
+    let run (settings: ScannerSettings) =
+        
+        ()
