@@ -33,8 +33,20 @@ let t =
                 //    match sb with
                 //    | SynBinding(accessibility, kind, isInline, isMutable, attributes, xmlDoc, valData, headPat, returnInfo, expr, range, debugPoint, trivia) -> failwith "todo")
 
-                match  bindings[0] with
-                | SynBinding(accessibility, kind, isInline, isMutable, attributes, xmlDoc, valData, headPat, returnInfo, expr, range, debugPoint, trivia) ->
+                match bindings[0] with
+                | SynBinding(accessibility,
+                             kind,
+                             isInline,
+                             isMutable,
+                             attributes,
+                             xmlDoc,
+                             valData,
+                             headPat,
+                             returnInfo,
+                             expr,
+                             range,
+                             debugPoint,
+                             trivia) ->
                     match headPat with
                     | SynPat.Const(constant, range) -> failwith "todo"
                     | SynPat.Wild range -> failwith "todo"
@@ -56,8 +68,9 @@ let t =
                     | SynPat.QuoteExpr(expr, range) -> failwith "todo"
                     | SynPat.InstanceMember(thisId, memberId, toolingId, accessibility, range) -> failwith "todo"
                     | SynPat.FromParseError(pat, range) -> failwith "todo"
-                    
+
                     failwith "todo"
+
                 printfn "let"
 
             | SynModuleDecl.Expr(expr, range) -> printfn "expr"
