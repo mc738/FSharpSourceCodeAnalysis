@@ -21,29 +21,25 @@ module Scanner =
 
     and AttributeCondition = { AttributeName: string }
 
-    type BindingWatcher =
-        {
-            Condition: Condition
-        }
-    
+    type BindingWatcher = { Condition: BindingWatcherCondition }
+
     and BindingWatcherCondition =
-        | Not of Condition
-        | And of Condition * Condition
-        | Or of Condition * Condition
-        | Any of Condition list
-        | All of Condition list
-    
-    type WatchedBinding =
-        {
-            Name: string
-            RawBinding: SynBinding
-        }
+        | HasAttribute of AttributeCondition
+        | Bespoke of Fn: (SynBinding -> bool)
+        | Not of BindingWatcherCondition
+        | And of BindingWatcherCondition * BindingWatcherCondition
+        | Or of BindingWatcherCondition * BindingWatcherCondition
+        | Any of BindingWatcherCondition list
+        | All of BindingWatcherCondition list
         
-    and WatchedBindingType =
-        | Function
-        | Method
-    
-    type AnalyzerRuleResult = { RuleId: string; Range: SourceRange }
+        member bwc.Test()
+
+    type WatchedBinding =
+        { Name: string
+          Range: SourceRange
+          RawBinding: SynBinding }
+
+    and AnalyzerRuleResult = { RuleId: string; Range: SourceRange }
 
     and SourceRange =
         { StartLine: int
@@ -58,7 +54,5 @@ module Scanner =
               EndColumn = range.End.Column }
 
     type ScannerState =
-        {
-            BindingWatchers: BindingWatcher list
-            WatchedBindings: WatchedBinding list
-        }
+        { BindingWatchers: BindingWatcher list
+          WatchedBindings: WatchedBinding list }
