@@ -2,8 +2,19 @@
 open FSharp.Compiler.Syntax
 open FSharp.Compiler.Text
 open FSharpSourceCodeAnalysis.Core
+open FSharpSourceCodeAnalysis.Core.Scanner
 
 let checker = FSharpChecker.Create()
+
+let settings =
+    ({ BindingWatchers =
+        [ { Condition = BindingWatcherCondition.HasAttribute { AttributeName = "Vulnerable" }
+            Rules =
+              [ { Id = ""
+                  Name = ""
+                  Description = ""
+                  Condition = Condition.All [] } ] } ] }
+    : ScannerSettings)
 
 let result =
     match
@@ -99,7 +110,8 @@ let result =
                                                             range,
                                                             trivia) ->
 
-                    Scanner.run {} decls)
+
+                    Scanner.run settings decls)
 
         //failwith "todo"
         | ParsedInput.SigFile parsedSigFileInput -> failwith "todo"
