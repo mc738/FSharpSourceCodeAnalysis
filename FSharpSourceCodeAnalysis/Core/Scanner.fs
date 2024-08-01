@@ -120,7 +120,7 @@ module Scanner =
                              range,
                              debugPoint,
                              trivia) ->
-                    
+
                     let newWatcher =
                         { Name = ""
                           Range = SourceRange.FromRange binding.RangeOfHeadPattern
