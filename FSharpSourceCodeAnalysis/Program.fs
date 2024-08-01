@@ -96,23 +96,7 @@ let result =
 
 
         match fileResults.ParseTree with
-        | ParsedInput.ImplFile parsedImplFileInput ->
-            parsedImplFileInput.Contents
-            |> List.map (fun c ->
-                match c with
-                | SynModuleOrNamespace.SynModuleOrNamespace(longId,
-                                                            isRecursive,
-                                                            kind,
-                                                            decls,
-                                                            xmlDoc,
-                                                            attribs,
-                                                            accessibility,
-                                                            range,
-                                                            trivia) ->
-
-
-                    Scanner.run settings decls)
-
+        | ParsedInput.ImplFile parsedImplFileInput -> Scanner.run settings parsedImplFileInput
         //failwith "todo"
         | ParsedInput.SigFile parsedSigFileInput -> failwith "todo"
 
