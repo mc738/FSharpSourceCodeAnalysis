@@ -106,13 +106,28 @@ module Scanner =
 
         let newState =
             if settings.BindingWatchers |> List.exists (fun bw -> bw.Condition.Test binding) then
-                let newWatcher =
-                    { Name = ""
-                      Range = SourceRange.FromRange binding.RangeOfHeadPattern
-                      RawBinding = binding }
+                match binding with
+                | SynBinding(accessibility,
+                             kind,
+                             isInline,
+                             isMutable,
+                             attributes,
+                             xmlDoc,
+                             valData,
+                             headPat,
+                             returnInfo,
+                             expr,
+                             range,
+                             debugPoint,
+                             trivia) ->
+                    
+                    let newWatcher =
+                        { Name = ""
+                          Range = SourceRange.FromRange binding.RangeOfHeadPattern
+                          RawBinding = binding }
 
-                { state with
-                    WatchedBindings = newWatcher :: state.WatchedBindings }
+                    { state with
+                        WatchedBindings = newWatcher :: state.WatchedBindings }
             else
                 state
 
