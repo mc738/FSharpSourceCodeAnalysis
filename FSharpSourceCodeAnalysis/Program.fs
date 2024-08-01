@@ -1,10 +1,11 @@
 ﻿open FSharp.Compiler.CodeAnalysis
 open FSharp.Compiler.Syntax
 open FSharp.Compiler.Text
+open FSharpSourceCodeAnalysis.Core
 
 let checker = FSharpChecker.Create()
 
-let t =
+let result =
     match
         checker.ParseFile(
             "C:\\Users\\44748\\Projects\\FSharpSourceCodeAnalysis\\FSharpSourceCodeAnalysis\\Examples\\Example1.fs",
@@ -98,10 +99,12 @@ let t =
                                                             range,
                                                             trivia) ->
 
-                    decls |> List.map test)
+                    Scanner.run {} decls)
 
         //failwith "todo"
         | ParsedInput.SigFile parsedSigFileInput -> failwith "todo"
+
+
 
 //failwith "todo"
 
