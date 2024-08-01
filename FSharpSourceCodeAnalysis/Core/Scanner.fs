@@ -133,7 +133,7 @@ module Scanner =
 
         newState
 
-    let handleDeclaration (state: ScannerState) (settings: ScannerSettings) (declaration: SynModuleDecl) =
+    let handleDeclaration (settings: ScannerSettings) (state: ScannerState) (declaration: SynModuleDecl) =
         match declaration with
         | SynModuleDecl.ModuleAbbrev(ident, longId, range) -> state
         | SynModuleDecl.NestedModule(moduleInfo, isRecursive, decls, isContinuing, range, trivia) -> state
@@ -146,11 +146,24 @@ module Scanner =
         | SynModuleDecl.HashDirective(hashDirective, range) -> state
         | SynModuleDecl.NamespaceFragment fragment -> state
 
-    let run (settings: ScannerSettings) (declarations: SynModuleDecl list) =
-        let state = ScannerState.Empty
+    let handleDeclarations (settings: ScannerSettings) (state: ScannerState) (declarations: SynModuleDecl list) =
+        declarations |> List.fold (handleDeclaration settings) state
+
+    let run (settings: ScannerSettings) (input: ParsedImplFileInput) (*(declarations: SynModuleDecl list)*) =
+        input.Contents
+        |> List.fold
+            (fun state c ->
+                match c with
+                | SynModuleOrNamespace.SynModuleOrNamespace(longId,
+                                                            isRecursive,
+                                                            kind,
+                                                            decls,
+                                                            xmlDoc,
+                                                            attribs,
+                                                            accessibility,
+                                                            range,
+                                                            trivia) ->
 
 
-        
-
-
-        ()
+                    handleDeclarations settings state decls)
+            (ScannerState.Empty())
