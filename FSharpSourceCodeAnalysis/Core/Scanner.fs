@@ -133,10 +133,11 @@ module Scanner =
 
         newState
 
-    let handleDeclaration (settings: ScannerSettings) (state: ScannerState) (declaration: SynModuleDecl) =
+    let rec handleDeclaration (settings: ScannerSettings) (state: ScannerState) (declaration: SynModuleDecl) =
         match declaration with
         | SynModuleDecl.ModuleAbbrev(ident, longId, range) -> state
-        | SynModuleDecl.NestedModule(moduleInfo, isRecursive, decls, isContinuing, range, trivia) -> state
+        | SynModuleDecl.NestedModule(moduleInfo, isRecursive, decls, isContinuing, range, trivia) ->
+            decls |> List.fold (handleDeclaration settings) state
         | SynModuleDecl.Let(isRecursive, bindings, range) -> bindings |> List.fold (handleBinding settings) state
         | SynModuleDecl.Expr(expr, range) -> state
         | SynModuleDecl.Types(typeDefns, range) -> state
